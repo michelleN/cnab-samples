@@ -6,8 +6,8 @@ greeting=${GREETING:-"Hi! let's install the sample Spring Music demo app on Azur
 echo "[== $greeting Duffle user ==]"
 case $action in
     install)
-        echo "Add step to run an az login with service principal here"
-        
+        echo "Run az login with service principal to access Azure sub"
+        az login --service-principal --username --username $AZURE_CLIENT_ID --password $AZURE_CLIENT_SECRET --tenant $AZURE_TENANT_ID
 
         echo "This installation assumes you already have an AKS cluster"
         echo "Grabbing kubeconfig for cluster $CLUSTER_NAME in resource group: $AKS_RESOURCE_GROUP"
