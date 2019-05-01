@@ -1,13 +1,14 @@
 #!/bin/sh
-set -e
 
 action=$CNAB_ACTION
-name=$CNAB_INSTALLATION_NAME
 greeting=${GREETING:-"Hi! let's install the sample Spring Music demo app on Azure"}
 
 echo "[== $greeting Duffle user ==]"
 case $action in
     install)
+        echo "Add step to run an az login with service principal here"
+        
+
         echo "This installation assumes you already have an AKS cluster"
         echo "Grabbing kubeconfig for cluster $CLUSTER_NAME in resource group: $AKS_RESOURCE_GROUP"
         az aks get-credentials --resource-group $AKS_RESOURCE_GROUP --name $CLUSTER_NAME
