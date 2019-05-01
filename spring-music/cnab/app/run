@@ -1,0 +1,44 @@
+#!/bin/sh
+set -e
+
+action=$CNAB_ACTION
+name=$CNAB_INSTALLATION_NAME
+greeting=${GREETING:-"Hi! let's install the sample Spring Music demo app on Azure"}
+
+echo "[== $greeting Duffle user ==]"
+case $action in
+    install)
+        echo "This installation assumes you already have an AKS cluster"
+        echo "Grabbing kubeconfig for cluster $CLUSTER_NAME in resource group: $AKS_RESOURCE_GROUP"
+        az aks get-credentials --resource-group $AKS_RESOURCE_GROUP --name $CLUSTER_NAME
+
+        echo "Creating a resource group called $APP_RESOURCE_GROUP for the Mongo Cosmos DB service..."
+        az group create --name $APP_RESOURCE_GROUP --location $COSMOSDB_LOCATION
+
+        echo "Creating a Mongo Cosmos DB service..."
+        az cosmosdb create --name $COSMOSDB_SERVICE_NAME --resource-group $APP_RESOURCE_GROUP --kind MongoDB
+
+        echo "Get Cosmos DB connection string with credentials"
+        export COSMOSDB_CONNECT_STRING=$(az cosmosdb list-connection-strings --resource-group cnab --name briarmusic --query "connectionStrings[0].connectionString" -o tsv)
+        
+        echo "Installing application chart with connection string to Cosmos updated..."
+        helm upgrade --install spring-music /cnab/app/charts/spring-music --set deploy.cosmosConnectString=$COSMOSDB_CONNECT_STRING
+        
+        echo "Your Spring Music demo application is installed!"
+
+        ;;
+    uninstall)
+        echo "uninstall action"
+        az group delete $APP_RESOURCE_GROUP
+        ;;
+    upgrade)
+        echo "Upgrade action"
+        ;;
+    status)
+        echo "Status action"
+        ;;
+    *)
+    echo "No action for $action"
+    ;;
+esac
+echo "Action $action complete for $name"
