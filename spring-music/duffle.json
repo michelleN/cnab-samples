@@ -1,14 +1,28 @@
 {
     "name": "spring-music",
     "version": "0.1.0",
-    "schemaVersion": "v1.0.0-WD",
-    "invocationImages": [
-      {
-        "imageType": "docker",
-        "image": "chzbrgr71/spring-app-installer:0.1.0",
-        "digest": "sha256:d4d3344288dd000c7a28e54119cc8f5f6e10eb5c4a9c19ad610614310b169e9d"
-      }
+    "description": "A short description of your bundle",
+    "maintainers": [
+        {
+            "name": "Brian Redmond",
+            "email": "john.doe@example.com",
+            "url": "https://example.com"
+        },
+        {
+            "name": "Jane Doe",
+            "email": "jane.doe@example.com",
+            "url": "https://example.com"
+        }
     ],
+    "invocationImages": {
+        "spring-app-installer": {
+            "name": "spring-app-installer",
+            "builder": "docker",
+            "configuration": {
+                "registry": "chzbrgr71"
+            }
+        }
+    },
     "parameters": {
       "cluster_name": {
         "defaultValue": "briar-aks-ml-200",
@@ -55,10 +69,5 @@
         {"env":"AZURE_SUBSCRIPTION_ID"},
       "TENANT_ID":
         {"env":"AZURE_TENANT_ID"}
-    },
-    "actions": {
-        "status": {
-            "modifies": false
-        }
     }
 }
